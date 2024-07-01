@@ -10,7 +10,7 @@
 package gateapi
 
 type FundingBookItem struct {
-	// Loan rate
+	// Loan rate (daily rate)
 	Rate string `json:"rate,omitempty"`
 	// Borrowable amount
 	Amount string `json:"amount,omitempty"`

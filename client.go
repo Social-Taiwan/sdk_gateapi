@@ -49,7 +49,15 @@ type APIClient struct {
 
 	// API Services
 
+	AccountApi *AccountApiService
+
+	CollateralLoanApi *CollateralLoanApiService
+
 	DeliveryApi *DeliveryApiService
+
+	EarnApi *EarnApiService
+
+	EarnUniApi *EarnUniApiService
 
 	FlashSwapApi *FlashSwapApiService
 
@@ -57,9 +65,19 @@ type APIClient struct {
 
 	MarginApi *MarginApiService
 
+	MarginUniApi *MarginUniApiService
+
+	MultiCollateralLoanApi *MultiCollateralLoanApiService
+
 	OptionsApi *OptionsApiService
 
+	RebateApi *RebateApiService
+
 	SpotApi *SpotApiService
+
+	SubAccountApi *SubAccountApiService
+
+	UnifiedApi *UnifiedApiService
 
 	WalletApi *WalletApiService
 
@@ -82,12 +100,21 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.common.client = c
 
 	// API Services
+	c.AccountApi = (*AccountApiService)(&c.common)
+	c.CollateralLoanApi = (*CollateralLoanApiService)(&c.common)
 	c.DeliveryApi = (*DeliveryApiService)(&c.common)
+	c.EarnApi = (*EarnApiService)(&c.common)
+	c.EarnUniApi = (*EarnUniApiService)(&c.common)
 	c.FlashSwapApi = (*FlashSwapApiService)(&c.common)
 	c.FuturesApi = (*FuturesApiService)(&c.common)
 	c.MarginApi = (*MarginApiService)(&c.common)
+	c.MarginUniApi = (*MarginUniApiService)(&c.common)
+	c.MultiCollateralLoanApi = (*MultiCollateralLoanApiService)(&c.common)
 	c.OptionsApi = (*OptionsApiService)(&c.common)
+	c.RebateApi = (*RebateApiService)(&c.common)
 	c.SpotApi = (*SpotApiService)(&c.common)
+	c.SubAccountApi = (*SubAccountApiService)(&c.common)
+	c.UnifiedApi = (*UnifiedApiService)(&c.common)
 	c.WalletApi = (*WalletApiService)(&c.common)
 	c.WithdrawalApi = (*WithdrawalApiService)(&c.common)
 

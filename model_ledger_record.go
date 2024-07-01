@@ -14,6 +14,8 @@ type LedgerRecord struct {
 	Id string `json:"id,omitempty"`
 	// Hash record of the withdrawal
 	Txid string `json:"txid,omitempty"`
+	// Client order id, up to 32 length and can only include 0-9, A-Z, a-z, underscore(_), hyphen(-) or dot(.)
+	WithdrawOrderId string `json:"withdraw_order_id,omitempty"`
 	// Operation time
 	Timestamp string `json:"timestamp,omitempty"`
 	// Currency amount
@@ -27,7 +29,5 @@ type LedgerRecord struct {
 	// Record status.  - DONE: done - CANCEL: cancelled - REQUEST: requesting - MANUAL: pending manual approval - BCODE: GateCode operation - EXTPEND: pending confirm after sending - FAIL: pending confirm when fail - INVALID: invalid order - VERIFY: verifying - PROCES: processing - PEND: pending - DMOVE: required manual approval - SPLITPEND: the order is automatically split due to large amount
 	Status string `json:"status,omitempty"`
 	// Name of the chain used in withdrawals
-	Chain string `json:"chain,omitempty"`
-	// Fee
-	Fee string `json:"fee,omitempty"`
+	Chain string `json:"chain"`
 }

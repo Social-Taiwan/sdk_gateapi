@@ -14,7 +14,7 @@ type CrossMarginRepayment struct {
 	Id string `json:"id,omitempty"`
 	// Repayment time
 	CreateTime int64 `json:"create_time,omitempty"`
-	// Borrow loan ID
+	// Loan record ID
 	LoanId string `json:"loan_id,omitempty"`
 	// Currency name
 	Currency string `json:"currency,omitempty"`
@@ -22,4 +22,6 @@ type CrossMarginRepayment struct {
 	Principal string `json:"principal,omitempty"`
 	// Repaid interest
 	Interest string `json:"interest,omitempty"`
+	// Repayment type: none - no repayment type, manual_repay - manual repayment, auto_repay - automatic repayment, cancel_auto_repay - automatic repayment after cancellation
+	RepaymentType string `json:"repayment_type,omitempty"`
 }

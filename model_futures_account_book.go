@@ -16,8 +16,12 @@ type FuturesAccountBook struct {
 	Change string `json:"change,omitempty"`
 	// Balance after change
 	Balance string `json:"balance,omitempty"`
-	// Changing Type: - dnw: Deposit & Withdraw - pnl: Profit & Loss by reducing position - fee: Trading fee - refr: Referrer rebate - fund: Funding - point_dnw: POINT Deposit & Withdraw - point_fee: POINT Trading fee - point_refr: POINT Referrer rebate
+	// Changing Type：  - dnw: Deposit & Withdraw - pnl: Profit & Loss by reducing position - fee: Trading fee - refr: Referrer rebate - fund: Funding - point_dnw: POINT Deposit & Withdraw - point_fee: POINT Trading fee - point_refr: POINT Referrer rebate - bonus_offset: bouns deduction
 	Type string `json:"type,omitempty"`
 	// Comment
 	Text string `json:"text,omitempty"`
+	// Futures contract, the field is only available for data after 2023-10-30.
+	Contract string `json:"contract,omitempty"`
+	// trade id
+	TradeId string `json:"trade_id,omitempty"`
 }

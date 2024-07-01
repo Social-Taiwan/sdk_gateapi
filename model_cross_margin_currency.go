@@ -12,7 +12,7 @@ package gateapi
 type CrossMarginCurrency struct {
 	// Currency name
 	Name string `json:"name,omitempty"`
-	// Loan rate
+	// Minimum lending rate (hourly rate)
 	Rate string `json:"rate,omitempty"`
 	// Currency precision
 	Prec string `json:"prec,omitempty"`
@@ -26,6 +26,8 @@ type CrossMarginCurrency struct {
 	TotalMaxBorrowAmount string `json:"total_max_borrow_amount,omitempty"`
 	// Price change between this currency and USDT
 	Price string `json:"price,omitempty"`
+	// Whether currency is borrowed
+	Loanable bool `json:"loanable,omitempty"`
 	// status  - `0` : disable  - `1` : enable
 	Status int32 `json:"status,omitempty"`
 }

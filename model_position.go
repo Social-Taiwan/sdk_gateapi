@@ -43,6 +43,12 @@ type Position struct {
 	UnrealisedPnl string `json:"unrealised_pnl,omitempty"`
 	// Realized PNL
 	RealisedPnl string `json:"realised_pnl,omitempty"`
+	// Realized PNL - Position P/L
+	PnlPnl string `json:"pnl_pnl,omitempty"`
+	// Realized PNL -  Funding Fees
+	PnlFund string `json:"pnl_fund,omitempty"`
+	// Realized PNL - Transaction Fees
+	PnlFee string `json:"pnl_fee,omitempty"`
 	// History realized PNL
 	HistoryPnl string `json:"history_pnl,omitempty"`
 	// PNL of last position close
@@ -51,7 +57,7 @@ type Position struct {
 	RealisedPoint string `json:"realised_point,omitempty"`
 	// History realized POINT PNL
 	HistoryPoint string `json:"history_point,omitempty"`
-	// ADL ranking, ranging from 1 to 5
+	// Ranking of auto deleveraging, a total of 1-5 grades, `1` is the highest, `5` is the lowest, and `6` is the special case when there is no position held or in liquidation
 	AdlRanking int32 `json:"adl_ranking,omitempty"`
 	// Current open orders
 	PendingOrders int32               `json:"pending_orders,omitempty"`
@@ -60,4 +66,8 @@ type Position struct {
 	Mode string `json:"mode,omitempty"`
 	// Cross margin leverage(valid only when `leverage` is 0)
 	CrossLeverageLimit string `json:"cross_leverage_limit,omitempty"`
+	// Last update time
+	UpdateTime int64 `json:"update_time,omitempty"`
+	// First Open Time
+	OpenTime int64 `json:"open_time,omitempty"`
 }

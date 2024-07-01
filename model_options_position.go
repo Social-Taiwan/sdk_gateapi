@@ -9,23 +9,37 @@
 
 package gateapi
 
-// Futures position details
+// Options position information
 type OptionsPosition struct {
 	// User ID
 	User int32 `json:"user,omitempty"`
-	// Futures contract
+	// Underlying
+	Underlying string `json:"underlying,omitempty"`
+	// Underlying price (quote currency)
+	UnderlyingPrice string `json:"underlying_price,omitempty"`
+	// Options contract name
 	Contract string `json:"contract,omitempty"`
-	// Position size
+	// Position size (contract size)
 	Size int64 `json:"size,omitempty"`
-	// Entry price
+	// Entry size (quote currency)
 	EntryPrice string `json:"entry_price,omitempty"`
-	// Current mark price
+	// Current mark price (quote currency)
 	MarkPrice string `json:"mark_price,omitempty"`
+	// Implied volatility
+	MarkIv string `json:"mark_iv,omitempty"`
 	// Realized PNL
 	RealisedPnl string `json:"realised_pnl,omitempty"`
 	// Unrealized PNL
 	UnrealisedPnl string `json:"unrealised_pnl,omitempty"`
 	// Current open orders
-	PendingOrders int32               `json:"pending_orders,omitempty"`
-	CloseOrder    *PositionCloseOrder `json:"close_order,omitempty"`
+	PendingOrders int32                      `json:"pending_orders,omitempty"`
+	CloseOrder    *OptionsPositionCloseOrder `json:"close_order,omitempty"`
+	// Delta
+	Delta string `json:"delta,omitempty"`
+	// Gamma
+	Gamma string `json:"gamma,omitempty"`
+	// Vega
+	Vega string `json:"vega,omitempty"`
+	// Theta
+	Theta string `json:"theta,omitempty"`
 }

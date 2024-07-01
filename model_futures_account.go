@@ -10,7 +10,7 @@
 package gateapi
 
 type FuturesAccount struct {
-	// total = position_margin + order_margin + available
+	// total is the balance after the user's accumulated deposit, withdraw, profit and loss (including realized profit and loss, fund, fee and referral rebate), excluding unrealized profit and loss.  total = SUM(history_dnw, history_pnl, history_fee, history_refr, history_fund)
 	Total string `json:"total,omitempty"`
 	// Unrealized PNL
 	UnrealisedPnl string `json:"unrealised_pnl,omitempty"`
@@ -18,7 +18,7 @@ type FuturesAccount struct {
 	PositionMargin string `json:"position_margin,omitempty"`
 	// Order margin of unfinished orders
 	OrderMargin string `json:"order_margin,omitempty"`
-	// The available balance for transferring or trading
+	// The available balance for transferring or trading(including bonus.  Bonus can't be be withdrawn. The transfer amount needs to deduct the bonus)
 	Available string `json:"available,omitempty"`
 	// POINT amount
 	Point string `json:"point,omitempty"`
@@ -33,6 +33,8 @@ type FuturesAccount struct {
 	// Maintenance margin position, applicable to the portfolio margin account model
 	MaintenanceMargin string `json:"maintenance_margin,omitempty"`
 	// Perpetual Contract Bonus
-	Bonus   string                `json:"bonus,omitempty"`
-	History FuturesAccountHistory `json:"history,omitempty"`
+	Bonus string `json:"bonus,omitempty"`
+	// Classic account margin mode, true - enable new mode, false - revert to old mode.
+	EnableEvolvedClassic bool                  `json:"enable_evolved_classic,omitempty"`
+	History              FuturesAccountHistory `json:"history,omitempty"`
 }

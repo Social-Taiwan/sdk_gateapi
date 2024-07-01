@@ -9,7 +9,7 @@
 
 package gateapi
 
-// Contract detail.  USD value per contract:  - USDT settled contracts： `quanto_multiplier x token price` - BTC settled contracts：`quanto_multiplier x BTC price x token price`
+// Futures contract details
 type Contract struct {
 	// Futures contract
 	Name string `json:"name,omitempty"`
@@ -45,11 +45,11 @@ type Contract struct {
 	FundingInterval int32 `json:"funding_interval,omitempty"`
 	// Next funding time
 	FundingNextApply float64 `json:"funding_next_apply,omitempty"`
-	// Risk limit base
+	// Risk limit base,deprecated
 	RiskLimitBase string `json:"risk_limit_base,omitempty"`
-	// Step of adjusting risk limit
+	// Step of adjusting risk limit,deprecated
 	RiskLimitStep string `json:"risk_limit_step,omitempty"`
-	// Maximum risk limit the contract allowed
+	// Maximum risk limit the contract allowed,deprecated,It is recommended to use /futures/{settle}/risk_limit_tiers to query risk limits.
 	RiskLimitMax string `json:"risk_limit_max,omitempty"`
 	// Minimum order size the contract allowed
 	OrderSizeMin int64 `json:"order_size_min,omitempty"`
@@ -75,4 +75,12 @@ type Contract struct {
 	InDelisting bool `json:"in_delisting,omitempty"`
 	// Maximum number of open orders
 	OrdersLimit int32 `json:"orders_limit,omitempty"`
+	// Whether bouns is enabled
+	EnableBonus bool `json:"enable_bonus,omitempty"`
+	// Whether portfolio margin account is enabled
+	EnableCredit bool `json:"enable_credit,omitempty"`
+	// Created time of the contract
+	CreateTime float64 `json:"create_time,omitempty"`
+	// The factor for the maximum of the funding rate. Maximum of funding rate = (1/market maximum leverage - maintenance margin rate) * funding_cap_ratio
+	FundingCapRatio string `json:"funding_cap_ratio,omitempty"`
 }

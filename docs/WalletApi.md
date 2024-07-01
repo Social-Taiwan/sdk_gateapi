@@ -11,6 +11,7 @@ Method | HTTP request | Description
 [**Transfer**](WalletApi.md#Transfer) | **Post** /wallet/transfers | Transfer between trading accounts
 [**ListSubAccountTransfers**](WalletApi.md#ListSubAccountTransfers) | **Get** /wallet/sub_account_transfers | Retrieve transfer records between main and sub accounts
 [**TransferWithSubAccount**](WalletApi.md#TransferWithSubAccount) | **Post** /wallet/sub_account_transfers | Transfer between main and sub accounts
+[**SubAccountToSubAccount**](WalletApi.md#SubAccountToSubAccount) | **Post** /wallet/sub_account_to_sub_account | Sub-account transfers to sub-account
 [**ListWithdrawStatus**](WalletApi.md#ListWithdrawStatus) | **Get** /wallet/withdraw_status | Retrieve withdrawal status
 [**ListSubAccountBalances**](WalletApi.md#ListSubAccountBalances) | **Get** /wallet/sub_account_balances | Retrieve sub account balances
 [**ListSubAccountMarginBalances**](WalletApi.md#ListSubAccountMarginBalances) | **Get** /wallet/sub_account_margin_balances | Query sub accounts&#39; margin balances
@@ -19,6 +20,9 @@ Method | HTTP request | Description
 [**ListSavedAddress**](WalletApi.md#ListSavedAddress) | **Get** /wallet/saved_address | Query saved address
 [**GetTradeFee**](WalletApi.md#GetTradeFee) | **Get** /wallet/fee | Retrieve personal trading fee
 [**GetTotalBalance**](WalletApi.md#GetTotalBalance) | **Get** /wallet/total_balance | Retrieve user&#39;s total balances
+[**ListSmallBalance**](WalletApi.md#ListSmallBalance) | **Get** /wallet/small_balance | List small balance
+[**ConvertSmallBalance**](WalletApi.md#ConvertSmallBalance) | **Post** /wallet/small_balance | Convert small balance
+[**ListSmallBalanceHistory**](WalletApi.md#ListSmallBalanceHistory) | **Get** /wallet/small_balance_history | List small balance history
 
 
 ## ListCurrencyChains
@@ -155,7 +159,7 @@ func main() {
 
 ## ListWithdrawals
 
-> []LedgerRecord ListWithdrawals(ctx, optional)
+> []WithdrawalRecord ListWithdrawals(ctx, optional)
 
 Retrieve withdrawal records
 
@@ -220,7 +224,7 @@ func main() {
 
 ### Return type
 
-[**[]LedgerRecord**](LedgerRecord.md)
+[**[]WithdrawalRecord**](WithdrawalRecord.md)
 
 ### Authorization
 
@@ -259,7 +263,7 @@ Name | Type | Description  | Notes
 **currency** | **optional.String**| Filter by currency. Return all currency records if not specified | 
 **from** | **optional.Int64**| Time range beginning, default to 7 days before current time | 
 **to** | **optional.Int64**| Time range ending, default to current time | 
-**limit** | **optional.Int32**| Maximum number of records to be returned in a single list | [default to 100]
+**limit** | **optional.Int32**| The maximum number of entries returned in the list is limited to 500 transactions. | [default to 100]
 **offset** | **optional.Int32**| List offset, starting from 0 | [default to 0]
 
 ### Example
@@ -409,7 +413,7 @@ Optional parameters are passed through a pointer to a ListSubAccountTransfersOpt
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**subUid** | **optional.String**| Sub account user ID. Return records related to all sub accounts if not specified | 
+**subUid** | **optional.String**| User ID of sub-account, you can query multiple records separated by &#x60;,&#x60;. If not specified, it will return the records of all sub accounts | 
 **from** | **optional.Int64**| Time range beginning, default to 7 days before current time | 
 **to** | **optional.Int64**| Time range ending, default to current time | 
 **limit** | **optional.Int32**| Maximum number of records to be returned in a single list | [default to 100]
@@ -541,6 +545,77 @@ func main() {
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to README]](../README.md)
 
+## SubAccountToSubAccount
+
+> SubAccountToSubAccount(ctx, subAccountToSubAccount)
+
+Sub-account transfers to sub-account
+
+It is possible to perform balance transfers between two sub-accounts under the same main account. You can use either the API Key of the main account or the API Key of the sub-account to initiate the transfer.
+
+### Required Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**subAccountToSubAccount** | [**SubAccountToSubAccount**](SubAccountToSubAccount.md)|  | 
+
+### Example
+
+```golang
+package main
+
+import (
+    "context"
+    "fmt"
+
+    "github.com/gateio/gateapi-go/v6"
+)
+
+func main() {
+    client := gateapi.NewAPIClient(gateapi.NewConfiguration())
+    // uncomment the next line if your are testing against testnet
+    // client.ChangeBasePath("https://fx-api-testnet.gateio.ws/api/v4")
+    ctx := context.WithValue(context.Background(),
+                             gateapi.ContextGateAPIV4,
+                             gateapi.GateAPIV4{
+                                 Key:    "YOUR_API_KEY",
+                                 Secret: "YOUR_API_SECRET",
+                             }
+                            )
+    subAccountToSubAccount := gateapi.SubAccountToSubAccount{} // SubAccountToSubAccount - 
+    
+    result, _, err := client.WalletApi.SubAccountToSubAccount(ctx, subAccountToSubAccount)
+    if err != nil {
+        if e, ok := err.(gateapi.GateAPIError); ok {
+            fmt.Printf("gate api error: %s\n", e.Error())
+        } else {
+            fmt.Printf("generic error: %s\n", err.Error())
+        }
+    } else {
+        fmt.Println(result)
+    }
+}
+```
+
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[apiv4](../README.md#apiv4)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
 ## ListWithdrawStatus
 
 > []WithdrawStatus ListWithdrawStatus(ctx, optional)
@@ -636,7 +711,7 @@ Optional parameters are passed through a pointer to a ListSubAccountBalancesOpts
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**subUid** | **optional.String**| Sub account user ID. Return records related to all sub accounts if not specified | 
+**subUid** | **optional.String**| User ID of sub-account, you can query multiple records separated by &#x60;,&#x60;. If not specified, it will return the records of all sub accounts | 
 
 ### Example
 
@@ -712,7 +787,7 @@ Optional parameters are passed through a pointer to a ListSubAccountMarginBalanc
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**subUid** | **optional.String**| Sub account user ID. Return records related to all sub accounts if not specified | 
+**subUid** | **optional.String**| User ID of sub-account, you can query multiple records separated by &#x60;,&#x60;. If not specified, it will return the records of all sub accounts | 
 
 ### Example
 
@@ -788,7 +863,7 @@ Optional parameters are passed through a pointer to a ListSubAccountFuturesBalan
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**subUid** | **optional.String**| Sub account user ID. Return records related to all sub accounts if not specified | 
+**subUid** | **optional.String**| User ID of sub-account, you can query multiple records separated by &#x60;,&#x60;. If not specified, it will return the records of all sub accounts | 
 **settle** | **optional.String**| Query only balances of specified settle currency | 
 
 ### Example
@@ -865,7 +940,7 @@ Optional parameters are passed through a pointer to a ListSubAccountCrossMarginB
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**subUid** | **optional.String**| Sub account user ID. Return records related to all sub accounts if not specified | 
+**subUid** | **optional.String**| User ID of sub-account, you can query multiple records separated by &#x60;,&#x60;. If not specified, it will return the records of all sub accounts | 
 
 ### Example
 
@@ -944,6 +1019,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **chain** | **optional.String**| Chain name | [default to ]
 **limit** | **optional.String**| Maximum number returned, 100 at most | [default to 50]
+**page** | **optional.Int32**| Page number | [default to 1]
 
 ### Example
 
@@ -1021,6 +1097,7 @@ Optional parameters are passed through a pointer to a GetTradeFeeOpts struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **currencyPair** | **optional.String**| Specify a currency pair to retrieve precise fee rate  This field is optional. In most cases, the fee rate is identical among all currency pairs | 
+**settle** | **optional.String**| Specify the settlement currency of the contract to get more accurate rate settings  This field is optional. Generally, the rate settings for all settlement currencies are the same. | 
 
 ### Example
 
@@ -1141,6 +1218,217 @@ func main() {
 ### Return type
 
 [**TotalBalance**](TotalBalance.md)
+
+### Authorization
+
+[apiv4](../README.md#apiv4)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+## ListSmallBalance
+
+> SmallBalance ListSmallBalance(ctx, )
+
+List small balance
+
+### Required Parameters
+
+
+### Example
+
+```golang
+package main
+
+import (
+    "context"
+    "fmt"
+
+    "github.com/gateio/gateapi-go/v6"
+)
+
+func main() {
+    client := gateapi.NewAPIClient(gateapi.NewConfiguration())
+    // uncomment the next line if your are testing against testnet
+    // client.ChangeBasePath("https://fx-api-testnet.gateio.ws/api/v4")
+    ctx := context.WithValue(context.Background(),
+                             gateapi.ContextGateAPIV4,
+                             gateapi.GateAPIV4{
+                                 Key:    "YOUR_API_KEY",
+                                 Secret: "YOUR_API_SECRET",
+                             }
+                            )
+    
+    result, _, err := client.WalletApi.ListSmallBalance(ctx)
+    if err != nil {
+        if e, ok := err.(gateapi.GateAPIError); ok {
+            fmt.Printf("gate api error: %s\n", e.Error())
+        } else {
+            fmt.Printf("generic error: %s\n", err.Error())
+        }
+    } else {
+        fmt.Println(result)
+    }
+}
+```
+
+
+### Return type
+
+[**SmallBalance**](SmallBalance.md)
+
+### Authorization
+
+[apiv4](../README.md#apiv4)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+## ConvertSmallBalance
+
+> ConvertSmallBalance(ctx, convertSmallBalance)
+
+Convert small balance
+
+### Required Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**convertSmallBalance** | [**ConvertSmallBalance**](ConvertSmallBalance.md)|  | 
+
+### Example
+
+```golang
+package main
+
+import (
+    "context"
+    "fmt"
+
+    "github.com/gateio/gateapi-go/v6"
+)
+
+func main() {
+    client := gateapi.NewAPIClient(gateapi.NewConfiguration())
+    // uncomment the next line if your are testing against testnet
+    // client.ChangeBasePath("https://fx-api-testnet.gateio.ws/api/v4")
+    ctx := context.WithValue(context.Background(),
+                             gateapi.ContextGateAPIV4,
+                             gateapi.GateAPIV4{
+                                 Key:    "YOUR_API_KEY",
+                                 Secret: "YOUR_API_SECRET",
+                             }
+                            )
+    convertSmallBalance := gateapi.ConvertSmallBalance{} // ConvertSmallBalance - 
+    
+    result, _, err := client.WalletApi.ConvertSmallBalance(ctx, convertSmallBalance)
+    if err != nil {
+        if e, ok := err.(gateapi.GateAPIError); ok {
+            fmt.Printf("gate api error: %s\n", e.Error())
+        } else {
+            fmt.Printf("generic error: %s\n", err.Error())
+        }
+    } else {
+        fmt.Println(result)
+    }
+}
+```
+
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+[apiv4](../README.md#apiv4)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+## ListSmallBalanceHistory
+
+> SmallBalanceHistory ListSmallBalanceHistory(ctx, optional)
+
+List small balance history
+
+### Required Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**optional** | **ListSmallBalanceHistoryOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a ListSmallBalanceHistoryOpts struct
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**currency** | **optional.String**| Currency | 
+**page** | **optional.Int32**| Page number | [default to 1]
+**limit** | **optional.Int32**| Maximum response items.  Default: 100, minimum: 1, Maximum: 100 | [default to 100]
+
+### Example
+
+```golang
+package main
+
+import (
+    "context"
+    "fmt"
+
+    "github.com/gateio/gateapi-go/v6"
+)
+
+func main() {
+    client := gateapi.NewAPIClient(gateapi.NewConfiguration())
+    // uncomment the next line if your are testing against testnet
+    // client.ChangeBasePath("https://fx-api-testnet.gateio.ws/api/v4")
+    ctx := context.WithValue(context.Background(),
+                             gateapi.ContextGateAPIV4,
+                             gateapi.GateAPIV4{
+                                 Key:    "YOUR_API_KEY",
+                                 Secret: "YOUR_API_SECRET",
+                             }
+                            )
+    
+    result, _, err := client.WalletApi.ListSmallBalanceHistory(ctx, nil)
+    if err != nil {
+        if e, ok := err.(gateapi.GateAPIError); ok {
+            fmt.Printf("gate api error: %s\n", e.Error())
+        } else {
+            fmt.Printf("generic error: %s\n", err.Error())
+        }
+    } else {
+        fmt.Println(result)
+    }
+}
+```
+
+
+### Return type
+
+[**SmallBalanceHistory**](SmallBalanceHistory.md)
 
 ### Authorization
 
